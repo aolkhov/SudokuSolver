@@ -6,7 +6,7 @@ object Log {
     var level: Level = Level.Info
 
     private fun _raw_print(s: String) = kotlin.io.print(s)
-    private fun _raw_println_if(lvl: Level, s: String) { if( lvl >= this.level ) println(s) }
+    private fun _raw_println_if(lvl: Level, s: String) { if( lvl <= this.level ) println(s) }
 
     fun debug(s: String) = _raw_println_if(Level.Debug,   s)
     fun info(s: String)  = _raw_println_if(Level.Info,    s)

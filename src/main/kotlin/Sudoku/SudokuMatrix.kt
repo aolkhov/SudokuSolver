@@ -13,7 +13,7 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
 
         constructor(): this(-1, -1, -1)
         val isKnown get() = this.vals.size == 1
-        val value   get() = if( this.isKnown ) this.vals.iterator().next() else throw Exception("attempt to get single value from cell $this")
+        val value   get() = if( this.isKnown ) this.vals.iterator().next() else throw Exception("attempt to get single value from multi-value cell $this")
 
         fun str() = this.vals.sorted().joinToString(",")
 
@@ -188,7 +188,7 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
                   //line = line.replace(Regex("(\\d)"), MatchGroup(" $1 "))
                 val elms = line.trim().split(Regex("\\s+"))
                 if( elms.size != m.sideCellCount )
-                    throw InputFormatException(lineNum, "expected ${m.sideCellCount} elements, got ${elms.size}")
+                    throw InputFormatException(lineNum, "expected ${m.sideCellCount} values, got ${elms.size}")
 
                 for(col in 0..elms.lastIndex) {
                     val cellVal = if("." == elms[col]) 0 else elms[col].toInt()

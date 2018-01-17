@@ -9,22 +9,19 @@ Test Sudoku sources:
 * https://www.websudoku.com
 * http://www.sudokukingdom.com/
 
-##Compiling
+## Compiling
 
-###Maven
+### Maven
 `mvn clean package`
 
 ### Command line
 `kotlinc src/main/kotlin -include-runtime -d sudoku-solver.jar`
 
 
-The solving process
----
-
-##Running
+## Running
 `java -jar sudoku-solver.jar --warn easy1.sudoku`
 
-##The input
+## The input
 Empty lines are ignored, as well as everything following '#'
 
 The first line contains a single number N, denoting matrix side length, in quadrants.
@@ -36,7 +33,7 @@ Each row must have N^2 column values.
 Cell value is entered as a number from 1 to N^N (for matrix sizes greater than 3 they must be separated by at least one space).
 Empty cells are represented by dots ('.').
 
-###Sample
+### Sample
 
 ```
 3
@@ -52,7 +49,7 @@ Empty cells are represented by dots ('.').
 ```
 
 
-#Internals
+# Internals
 The solving process is based entirely on heuristics, there is no backtracking. 
 Heuristics differ based on their targets: cell, line (row or a column), quadrant, or the entire matrix.
 

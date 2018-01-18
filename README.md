@@ -10,11 +10,16 @@ Test Sudoku sources:
 * http://www.sudokukingdom.com/
 
 ## Compiling
+All examples below create self-contained JAR.
 
 ### Maven
 `mvn clean package`
 
 ### Command line
+Get command line Kotlin compiler from [Kotlin Site](http://kotlinlang.org/docs/tutorials/command-line.html)
+
+Change to project directory and compile the sources:
+
 `kotlinc src/main/kotlin -include-runtime -d sudoku-solver.jar`
 
 
@@ -30,19 +35,22 @@ Sizes are 2 (for 4x4 cell, 16 total), 3 (for 9x9 cells, 81 total), etc.
 The subsequent lines define matrix rows, one per line. There must be N^2 rows.
 Each row must have N^2 column values.
 
-Cell value is entered as a number from 1 to N^N (for matrix sizes greater than 3 they must be separated by at least one space).
+Cell value is entered as a number from 1 to N*N (for matrix sizes greater than 3 they must be separated by at least one space).
 Empty cells are represented by dots ('.').
 
 ### Sample
 
 ```
 3
+ 
 ..9 .8. ..6    # 259 184 376
 ... 97. 8..    # 416 973 825
 78. ... 4.1    # 783 625 491
+ 
 .3. ..7 .19    # 538 247 619
 .97 .3. 2..    # 197 836 254
 6.. 5.1 7..    # 624 591 783
+ 
 ..2 ... .47    # 862 359 147
 ... 762 .3.    # 941 762 538
 3.5 ..8 ...    # 375 418 962

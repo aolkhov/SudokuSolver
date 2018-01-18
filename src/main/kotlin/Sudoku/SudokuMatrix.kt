@@ -185,7 +185,6 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
                 line = getLineOrDie(reader).replace(".", " . ")
                 if( quadrantsPerSide <= 3 )  // allow no spaces between digits for 4x4 and 9x9 Sudoku
                     line = Regex("(\\d)").replace(line, " $1 ")
-                  //line = line.replace(Regex("(\\d)"), MatchGroup(" $1 "))
                 val elms = line.trim().split(Regex("\\s+"))
                 if( elms.size != m.sideCellCount )
                     throw InputFormatException(lineNum, "expected ${m.sideCellCount} values, got ${elms.size}")

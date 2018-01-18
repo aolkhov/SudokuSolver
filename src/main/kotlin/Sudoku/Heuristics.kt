@@ -3,7 +3,7 @@ package Sudoku
 private fun sumOfAllPossibleValues(sm: SudokuMatrix) =  sm.possibleValueCount * (sm.possibleValueCount + 1) / 2
 
 class SingleValueInCellHeuristic: CellHeuristic() {
-    override fun apply(sm: SudokuMatrix, cell: SudokuMatrix.Cell): Boolean {
+    override fun apply(sm: SudokuMatrix, cell: Cell): Boolean {
         if( !cell.isKnown )
             return false
 
@@ -24,9 +24,9 @@ class SingleValueInCellHeuristic: CellHeuristic() {
  * fill the remaining unknown with the only possible value
  * Input: all cells of a row, column, or quadrant
  */
-fun allButOneAreKnown(title: String, sm: SudokuMatrix, cells: List<SudokuMatrix.Cell>): Boolean {
+fun allButOneAreKnown(title: String, sm: SudokuMatrix, cells: List<Cell>): Boolean {
     var allValsSum= sumOfAllPossibleValues(sm)
-    var targetCell: SudokuMatrix.Cell? = null
+    var targetCell: Cell? = null
     for(cell in cells) {
         if( cell.isKnown )
             allValsSum -= cell.value
@@ -65,7 +65,7 @@ class AllButOneAreKnownInQuadrant: QuadrantHeuristic() {
  * fill the remaining unknown with the only possible value
  * Input: groups of cells with unknown value, group being cells of a row, column, or quadrant
  */
-fun uniqueValueLeft(title: String, sm: SudokuMatrix, cells: List<SudokuMatrix.Cell>): Boolean {
+fun uniqueValueLeft(title: String, sm: SudokuMatrix, cells: List<Cell>): Boolean {
     var modified = false
     outer@ for(cell in cells.filter { !it.isKnown }) {
         var vs: Set<Int> = HashSet<Int>(cell.vals) //.toMutableSet()
@@ -106,7 +106,7 @@ class UniqueValueLeftInQuadrant: QuadrantHeuristic() {
  * If group of cells contains K cells with the same K values, no other cells may contain these values.
  * Input: groups of cells with unknown value, group being cells of a row, column, or quadrant
  */
-fun combinationRemover(title: String, uqCells: List<SudokuMatrix.Cell>): Boolean {
+fun combinationRemover(title: String, uqCells: List<Cell>): Boolean {
     if( uqCells.size <= 1 )
         return false
 
@@ -146,14 +146,14 @@ class CombinationInQuadrant: QuadrantHeuristic() {
  * Redundant values in combination remover
  * If a group of K cells (K < N) has the same values, then that group may not contain any other value
  */
-fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<SudokuMatrix.Cell>): Boolean {
+fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<Cell>): Boolean {
     var modified = false
 
     /**
      * set1: candidate set
      * set2: all other cells
      */
-    fun processSubset(set1: Set<SudokuMatrix.Cell>, set2withKnowns: Set<SudokuMatrix.Cell>) {
+    fun processSubset(set1: Set<Cell>, set2withKnowns: Set<Cell>) {
         // common values of set1 elements are our candidates for closet set
         // Could use set1.forEach { commonValues.retainAll(it.vals) } but we want to break ASAP
         val commonValues: MutableSet<Int> = set1.iterator().next().vals.toMutableSet()
@@ -184,7 +184,7 @@ fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<SudokuMatrix.Ce
         }
     }
 
-    fun processAllSubsets(set1: Set<SudokuMatrix.Cell>, set2: Set<SudokuMatrix.Cell>, setOfKnown: Set<SudokuMatrix.Cell>) {
+    fun processAllSubsets(set1: Set<Cell>, set2: Set<Cell>, setOfKnown: Set<Cell>) {
         if( set1.size > 1 )                 // "last value in the set" is handled by other, less expensive heuristics
             processSubset(set1, set2 + setOfKnown)
 
@@ -221,14 +221,14 @@ class ClosetSubsetInQuadrant: QuadrantHeuristic() {
  */
 class MatchingLineSubsets(sm: SudokuMatrix): MatrixHeuristic(sm) {
 
-    private fun getUncertainValuesInQuadrant(zell: SudokuMatrix.Cell): Set<Int> {
+    private fun getUncertainValuesInQuadrant(zell: Cell): Set<Int> {
         val uncertainVals: MutableSet<Int> = mutableSetOf()
         this.sm.QuadrantCells(zell).asSequence().toList().filter{ !it.isKnown }.forEach{ uncertainVals += it.vals }
         return uncertainVals
     }
 
 
-    private fun getLinesWithValue(zell: SudokuMatrix.Cell, v: Int, rcMapper: (SudokuMatrix.Cell) -> Int): List<Int> =
+    private fun getLinesWithValue(zell: Cell, v: Int, rcMapper: (Cell) -> Int): List<Int> =
         this.sm.QuadrantCells(zell).asSequence().toList().filter { it.vals.contains(v) }.map { cell -> rcMapper(cell) }.distinct()
 
 
@@ -239,7 +239,7 @@ class MatchingLineSubsets(sm: SudokuMatrix): MatrixHeuristic(sm) {
         var modified = false
 
         for(v in distinctVals) {
-            fun lineChooser(cell: SudokuMatrix.Cell): Int = if( isHorizontal ) cell.row else cell.col
+            fun lineChooser(cell: Cell): Int = if( isHorizontal ) cell.row else cell.col
             val thisLines = this.getLinesWithValue(zell, v, { cell -> lineChooser(cell) }).toSet()
             if( thisLines.size >= sm.quadrantSideLen )  // the value is everywhere, nothing to remove
                 continue

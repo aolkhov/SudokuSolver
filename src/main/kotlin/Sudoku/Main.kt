@@ -104,7 +104,6 @@ fun handleArgs(args: Array<String>): SudokuMatrix {
 }
 
 
-
 class InputFormatException(lineNum: Int, msg: String): Exception("error at input line $lineNum: $msg")
 
 abstract class Heuristic {

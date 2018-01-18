@@ -8,6 +8,7 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
         var vals: Set<Int> = emptySet() //IntRange(1, this@SudokuMatrix.possibleValueCount).toMutableSet()
 
         init {
+            require(knownValue >= -1 && knownValue <= this@SudokuMatrix.possibleValueCount)
             this.vals = if( knownValue != 0 ) setOf(knownValue) else IntRange(1, this@SudokuMatrix.possibleValueCount).toMutableSet()
         }
 

@@ -2,6 +2,9 @@ package Sudoku
 
 private fun sumOfAllPossibleValues(sm: SudokuMatrix) =  sm.possibleValueCount * (sm.possibleValueCount + 1) / 2
 
+/**
+ * When cell has a known value, no other cells in the same row, column, or quadrant, have that value
+ */
 class SingleValueInCellHeuristic: CellHeuristic() {
     override fun apply(sm: SudokuMatrix, cell: Cell): Boolean {
         if( !cell.isKnown )

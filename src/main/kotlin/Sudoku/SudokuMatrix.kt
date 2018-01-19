@@ -13,9 +13,9 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
         }
 
         constructor(): this(-1, -1, -1)
-        constructor(row: Int, col: Int, vlist: List<Int>): this(row, col, -1) {
-            require( vlist.all { it >= 1 && it <= this@SudokuMatrix.possibleValueCount } )
-            this.vals = vlist.toMutableSet()
+        constructor(row: Int, col: Int, vset: Set<Int>): this(row, col, -1) {
+            require( vset.all { it >= 1 && it <= this@SudokuMatrix.possibleValueCount } )
+            this.vals = vset
         }
 
         val isKnown get() = this.vals.size == 1

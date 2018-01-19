@@ -63,4 +63,8 @@ Heuristics differ based on their targets: cell, line (row or a column), quadrant
 
 Usually they are pretty straightforward, but one, closetSubset, is NP-complete.
 
-TODO: describe heuristics
+## Heuristics
+
+##### SingleValueInCellHeuristic
+When cell has a known value, no other cells in the same row, column, or quadrant, have that value
+ 

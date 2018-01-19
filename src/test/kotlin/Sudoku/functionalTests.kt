@@ -24,7 +24,7 @@ class SolverTest : StringSpec() {
                 throw InputFormatException(SudokuMatrix.lineNum, "expected ${sm.sideCellCount} values, got ${elms.size}")
             for(c in 0 until elms.size) {
                 val vals = elms[c].split(',').map { v -> v.toInt() }
-                sm.cells[r][c] = sm.Cell(r, c, vals)
+                sm.cells[r][c] = sm.Cell(r, c, vals.toMutableSet())
             }
         }
         return sm

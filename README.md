@@ -68,3 +68,5 @@ Usually they are pretty straightforward, but one, closetSubset, is NP-complete.
 ##### SingleValueInCellHeuristic
 When cell has a known value, no other cells in the same row, column, or quadrant, have that value
  
+##### AllButOneAreKnownInRow, Column, or Quadrant
+If all values but one are known for any row, column, or a quadrant, the ramaining value must be set.

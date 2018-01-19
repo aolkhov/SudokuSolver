@@ -4,8 +4,8 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 
 class SingleValueInCellHeuristicTest : StringSpec() { init {
-    "SingleValueInCellHeuristic should remove known cell value from related cells" {
-        Log.level = Log.Level.Error
+    Log.level = Log.Level.Error
+    "SingleValueInCellHeuristic should remove a known cell value from related cells" {
         val sm = SudokuMatrix(3)
         val cellVal = 8
 

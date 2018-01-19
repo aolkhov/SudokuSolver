@@ -11,6 +11,13 @@ fun main(args: Array<String>) {
 
     val sm = handleArgs(args)
 
+    solve(sm)
+
+    Log.info("The resulting matrix:")
+    SudokuMatrix.print(sm)
+}
+
+fun solve(sm: SudokuMatrix) {
     val heuristics: Array<Heuristic> = arrayOf(
             SingleValueInCellHeuristic(),
             AllButOneAreKnownInRow(), AllButOneAreKnownInCol(), AllButOneAreKnownInQuadrant(),
@@ -20,14 +27,6 @@ fun main(args: Array<String>) {
             ClosetSubsetInRow(), ClosetSubsetInCol(), ClosetSubsetInQuadrant()
     )
 
-    sm.prepare()
-    solve(sm, heuristics)
-
-    Log.info("The resulting matrix:")
-    SudokuMatrix.print(sm)
-}
-
-fun solve(sm: SudokuMatrix, heuristics: Array<Heuristic>) {
     sm.prepare()
     var pass = 0
     while( sm.nextWorkSet.hasWork() ) {

@@ -13,6 +13,11 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
         }
 
         constructor(): this(-1, -1, -1)
+        constructor(row: Int, col: Int, vlist: List<Int>): this(row, col, -1) {
+            require( vlist.all { it >= 1 && it <= this@SudokuMatrix.possibleValueCount } )
+            this.vals = vlist.toMutableSet()
+        }
+
         val isKnown get() = this.vals.size == 1
         val value   get() = if( this.isKnown ) this.vals.iterator().next() else throw Exception("attempt to get single value from multi-value cell $this")
 
@@ -140,7 +145,6 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
 
     val sideCellCount = this.quadrantsPerSide * this.quadrantsPerSide
     val possibleValueCount: Int get() = this.sideCellCount
-    //val quadrantsPerSide: Int get() = this.quadrantsPerSide
     val quadrantSideLen: Int get() = this.quadrantsPerSide
     val cells: Array<Array<Cell>> = Array( this.sideCellCount ) { Array(this.sideCellCount) { Cell() } }
 
@@ -165,9 +169,9 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
 
 
     companion object {
-        private var lineNum = 0
+        var lineNum = 0
 
-        private fun getLineOrDie(reader: BufferedReader) : String {
+        fun getLineOrDie(reader: BufferedReader) : String {
             while(true) {
                 lineNum++
                 val line: String = reader.readLine()?.substringBefore('#')?.trim() ?: throw InputFormatException(lineNum, "unexpected end of input")

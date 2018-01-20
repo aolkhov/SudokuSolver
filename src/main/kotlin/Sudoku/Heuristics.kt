@@ -176,7 +176,7 @@ fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<Cell>): Boolean
 
         // when set1 has K members and contains K unique values, we've found a closet set
         if( uniqueVals.size == set1.size ) {
-            val closetSetStr = set1.map { e -> "[${e.row}][${e.col}]" }.joinToString(", ")
+            val closetSetStr = set1.joinToString(", ") { e -> "[${e.row}][${e.col}]" }
             for (cell in set1.filter { it.vals != uniqueVals }) {
                 modified = true
                 val oldValsStr = cell.str()
@@ -235,7 +235,7 @@ class MatchingLineSubsets(sm: SudokuMatrix): MatrixHeuristic(sm) {
         this.sm.QuadrantCells(zell).asSequence().toList().filter { it.vals.contains(v) }.map { cell -> rcMapper(cell) }.distinct()
 
 
-    private fun processQuadrantStrip(baseLine: Int, thisQuadrantLine: Int, isHorizontal: Boolean): Boolean {
+    private fun processQuadrantStripe(baseLine: Int, thisQuadrantLine: Int, isHorizontal: Boolean): Boolean {
         val otherQuadrantLines = (0 until sm.sideCellCount step sm.quadrantSideLen).asSequence().toSet() - thisQuadrantLine
         val zell = if( isHorizontal ) this.sm.cells[baseLine][thisQuadrantLine] else this.sm.cells[thisQuadrantLine][baseLine]
         val distinctVals = this.getUncertainValuesInQuadrant(zell)
@@ -260,7 +260,7 @@ class MatchingLineSubsets(sm: SudokuMatrix): MatrixHeuristic(sm) {
             if( 1 + sameLineSetQuadrants.size == thisLines.size ) {
                 for(qline in otherQuadrantLines.filter{ !sameLineSetQuadrants.contains(it) }) {  // all other quadrants
                     for(lineToClear in thisLines) {
-                        for(qline2 in qline until qline + sm.quadrantSideLen) {              // all its other dimension
+                        for(qline2 in qline until qline + sm.quadrantSideLen) {  // all cells in its other dimension
                             val r = if( isHorizontal ) lineToClear else qline2
                             val c = if( isHorizontal ) qline2 else lineToClear
                             val cellModified = sm.cells[r][c].removeCandidateValue(v)
@@ -286,8 +286,8 @@ class MatchingLineSubsets(sm: SudokuMatrix): MatrixHeuristic(sm) {
         val lineIndexes = (0 until sm.sideCellCount step sm.quadrantSideLen).asSequence().toList()
         for(dim1 in lineIndexes)
             for(dim2 in lineIndexes) {
-                modified = processQuadrantStrip(dim1, dim2, true ) || modified
-                modified = processQuadrantStrip(dim1, dim2, false) || modified
+                modified = processQuadrantStripe(dim1, dim2, true ) || modified
+                modified = processQuadrantStripe(dim1, dim2, false) || modified
             }
 
         return modified

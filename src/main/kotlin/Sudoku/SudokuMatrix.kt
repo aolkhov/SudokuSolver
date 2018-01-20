@@ -153,11 +153,8 @@ class SudokuMatrix(val quadrantsPerSide: Int) {
 
     fun prepare() {  // Call startNextCycle() to switch curr/next
         for(r in 0 until this.sideCellCount)
-            for(c in 0 until this.sideCellCount) {
+            for(c in 0 until this.sideCellCount)
                 this.nextWorkSet.cells[r][c] = this.cells[r][c].isKnown
-                //if( this.cells[r][c].isKnown )
-                //    this.nextWorkSet.markModified(this.cells[r][c])
-            }
     }
 
     fun startNextCycle() {

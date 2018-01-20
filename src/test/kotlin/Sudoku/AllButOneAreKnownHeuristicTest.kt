@@ -29,7 +29,7 @@ class AllButOneAreKnownHeuristicTest : StringSpec() { init {
         cells[pos+2].vals = uncertainSet.toSet()
         allButOneAreKnown("not important", sm, cells) shouldBe false
         cells.forEach {
-            val cellPos = it.row - 1   // rows sart with 1, and pos start with 0
+            val cellPos = it.row - 1   // rows start with 1, and pos start with 0
             if( cellPos == pos+1 || cellPos == pos+2 )
                 it.vals shouldBe uncertainSet
             else

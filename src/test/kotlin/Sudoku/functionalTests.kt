@@ -16,7 +16,7 @@ class SolverTest : StringSpec() {
         }
     }
 
-    fun readTestCase(reader: BufferedReader, quadrantsPerSide: Int): SudokuMatrix {
+    private fun readTestCase(reader: BufferedReader, quadrantsPerSide: Int): SudokuMatrix {
         val sm = SudokuMatrix(quadrantsPerSide)
         for(r in 0 until sm.sideCellCount) {
             val elms = SudokuMatrix.getLineOrDie(reader).trim().split(Regex("\\s+"))
@@ -30,7 +30,7 @@ class SolverTest : StringSpec() {
         return sm
     }
 
-    fun solveAndVerify(file: File) {
+    private fun solveAndVerify(file: File) {
         print("running test ${file.name} ... ")
         val reader = file.bufferedReader()
         val smt = SudokuMatrix.read(reader)

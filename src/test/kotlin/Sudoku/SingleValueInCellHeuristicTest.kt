@@ -34,7 +34,7 @@ class SingleValueInCellHeuristicTest : StringSpec() { init {
                 it.vals shouldBe setOf(cellVal)
             else if (it.row == row || it.col == col)
                 it.vals shouldBe touchedVals
-            else if (qcellXY.contains(Pair<Int, Int>(it.row, it.col)))
+            else if (qcellXY.contains(Pair(it.row, it.col)))
                 it.vals shouldBe touchedVals
             else
                 it.vals shouldBe untouchedVals

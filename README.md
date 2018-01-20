@@ -2,7 +2,7 @@
 Heuristic based Sudoku solver
 
 The main project goal was to learn Kotlin while having fun developing Sudoku
-hauristics. One can notice how parts of the code written later adopt more
+heuristics. One can notice how parts of the code written later adopt more
 Kotlin constructs and functional style.
 
 Test Sudoku sources:
@@ -63,17 +63,70 @@ Heuristics differ based on their targets: cell, line (row or a column), quadrant
 
 Usually they are pretty straightforward, but one, closetSubset, is NP-complete.
 
+These heuristic set was enough to solve all Sudoku tested so far.
+This of course does not prove they will solve every Sudoku out there. 
+
 ## Heuristics
 
 ##### SingleValueInCellHeuristic
-When cell has a known value, no other cells in the same row, column, or quadrant, have that value
+When cell has a known value, the value may be removed from the list of possible values
+of all other cells.
+
+Complexity: O(N)
  
 ##### AllButOneAreKnownInRow, Column, or Quadrant
-If all values but one are known for any row, column, or a quadrant, the ramaining value must be set.
+If all values but one are known for any row, column, or a quadrant, the only remaining cell
+with undetermined value has that missing value.
+
+Complexity: O(N)
 
 ##### UniqueValueLeftInRow, Column, or Quadrant
 When a value only appears in one cell and not anywhere else, then that's the cell value
 
+Complexity: O(N)
+
 ##### CombinationInRow, Column, or Quadrant
-When a group of N cells contains K cells (K < N) with the same K values,
+When a group of N cells contains K cells (K < N) with the same K possible values,
 no other cells in the group may contain these values.
+
+Complexity: O(N^2)
+
+##### ClosetSubsetInRow, Column, or Quadrant
+When a group of K cells (K < N) contain the same subset of K possible values, and the values
+do not appear in cells outside of the group, then the group members only contain these values.
+All other possible values can be safely removed from these K cells.
+
+Complexity: NP
+
+##### MatchingLineSubsets
+Applies to a horizontal or vertical stripe of quadrants
+
+If a value only appears in the same K lines of K quadrants (K < N),
+then the value can't be present in these lines of the remaining quadrants.
+<br>(*Here, "line" denotes a row or a column.*)
+
+###### Example
+**Source**:
+```
+Row   Q1        Q2        Q3        Q4
+  1   . x . .   . . . x   x x x x   x x x x
+  2   . . . .   . . . .   x x x x   x x x x
+  3   . . x .   . x . .   x x x x   x x x x
+  4   . . . .   . . . .   x x x x   x x x x
+```
+*(candidate values of '.' cells do not contain x)*
+
+Since value *x* appears in two rows (1 and 3) of two quadrants (Q1 and Q2),
+it can not appear in these rows of the other quadrants Q3 and Q4.  
+
+**Result**
+```
+Row   Q1        Q2        Q3        Q4
+  1   . x . .   . . . x   . . . .   . . . .
+  2   . . . .   . . . .   x x x x   x x x x
+  3   . . x .   . x . .   . . . .   . . . .
+  4   . . . .   . . . .   x x x x   x x x x
+```
+*(x has been cleared from rows 1 and 3 in quadrants Q3 and Q4)*
+
+Complexity: O(N^3) for one stripe. O(N^4) for the entire matrix

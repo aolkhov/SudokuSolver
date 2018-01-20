@@ -6,13 +6,12 @@ import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.StringSpec
 
 val uncertain4: Set<Int> = setOf(1,2,3,4)
-val uncertain9: Set<Int> = setOf(1,2,3,4,5,6,7,8,9)
 
 val input2x2 = """
     # lines starting with '#' should be ignored
     2
 
-    1 2  34        # this text shouild also be ignored
+    1 2  34        # this text should also be ignored
     ..   1 .
     ....
     . .. .

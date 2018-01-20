@@ -72,4 +72,8 @@ When cell has a known value, no other cells in the same row, column, or quadrant
 If all values but one are known for any row, column, or a quadrant, the ramaining value must be set.
 
 ##### UniqueValueLeftInRow, Column, or Quadrant
-When a value appears in one cell and not anywhere else, then that's the cell value
+When a value only appears in one cell and not anywhere else, then that's the cell value
+
+##### CombinationInRow, Column, or Quadrant
+When a group of N cells contains K cells (K < N) with the same K values,
+no other cells in the group may contain these values.

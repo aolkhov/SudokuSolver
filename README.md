@@ -70,3 +70,6 @@ When cell has a known value, no other cells in the same row, column, or quadrant
  
 ##### AllButOneAreKnownInRow, Column, or Quadrant
 If all values but one are known for any row, column, or a quadrant, the ramaining value must be set.
+
+##### UniqueValueLeftInRow, Column, or Quadrant
+When a value appears in one cell and not anywhere else, then that's the cell value

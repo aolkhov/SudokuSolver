@@ -1,6 +1,5 @@
 package Sudoku
 
-import io.kotlintest.matchers.should
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 

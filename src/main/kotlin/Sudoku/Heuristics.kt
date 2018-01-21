@@ -1,5 +1,7 @@
 package Sudoku
 
+import kotlin.math.roundToInt
+
 private fun sumOfAllPossibleValues(sm: SudokuMatrix) =  sm.possibleValueCount * (sm.possibleValueCount + 1) / 2
 
 /**
@@ -187,9 +189,33 @@ fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<Cell>): Boolean
         }
     }
 
+    fun getCacheVal(set1: Set<Cell>, set2: Set<Cell>, set3: Set<Cell>) =
+        set1.sortedBy { it.row * sm.possibleValueCount + it.col }.joinToString(";") { e -> "${e.row},${e.col}" } + '|' +
+        set2.sortedBy { it.row * sm.possibleValueCount + it.col }.joinToString(";") { e -> "${e.row},${e.col}" } + '|' +
+        set3.sortedBy { it.row * sm.possibleValueCount + it.col }.joinToString(";") { e -> "${e.row},${e.col}" }
+
+    val processedCache: MutableSet<String> = mutableSetOf()
+    var cacheHits = 0
+    var procCalls = 0
+
     fun processAllSubsets(set1: Set<Cell>, set2: Set<Cell>, setOfKnown: Set<Cell>) {
-        if( set1.size > 1 )                 // "last value in the set" is handled by other, less expensive heuristics
-            processSubset(set1, set2 + setOfKnown)
+
+        if( set1.size > 1 ) {                // "last value in the set" is handled by other, less expensive heuristics
+            procCalls++
+            val cacheVal = getCacheVal(set1, set2, setOfKnown)
+            if( cacheVal in processedCache ) {
+                cacheHits++
+            } else {
+                if( Log.level >= Log.Level.Debug ) {
+                    fun setAsString(set: Set<Cell>) =
+                            set.sortedBy { it.row * sm.possibleValueCount + it.col }.joinToString(", ") { e -> "[${e.row}][${e.col}]" }
+                    Log.print("++ processAllSubsets: set1 ${set1.size}: { ${setAsString(set1)} }, set2 ${set2.size}: { ${setAsString(set2)} }, known size: ${setOfKnown.size}\n")
+                }
+
+                processSubset(set1, set2 + setOfKnown)
+                processedCache.add(cacheVal)
+            }
+        }
 
         if( set2.size > 1 )
             set2.forEach { processAllSubsets(set1 + it, set2 - it, setOfKnown) }
@@ -199,6 +225,8 @@ fun closetSubset(title: String, sm: SudokuMatrix, allCells: List<Cell>): Boolean
     val cellsSet = allCells.toSet() - setOfKnown
     cellsSet.forEach { processAllSubsets(setOf(it), cellsSet - it, setOfKnown) }
 
+    val cacheHitRatio = if( procCalls == 0 ) 0f else (cacheHits * 1000f / procCalls).roundToInt() / 1000f
+    Log.info("$title: stats: total processing calls: ${procCalls}, skipped ${cacheHits}, cache hit ratio: ${cacheHitRatio}")
     return modified
 }
 

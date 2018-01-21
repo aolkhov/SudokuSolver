@@ -92,7 +92,7 @@ no other cells in the group may contain these values.
 Complexity: O(N^2)
 
 ##### ClosetSubsetInRow, Column, or Quadrant
-When a group of K cells (K < N) contain the same subset of K possible values, and the values
+When a group of K cells (K < N) contains the same subset of K possible values, and the values
 do not appear in cells outside of the group, then the group members only contain these values.
 All other possible values can be safely removed from these K cells.
 

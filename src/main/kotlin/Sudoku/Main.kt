@@ -18,13 +18,19 @@ fun main(args: Array<String>) {
 }
 
 fun solve(sm: SudokuMatrix) {
-    val heuristics: Array<Heuristic> = arrayOf(
-            SingleValueInCellHeuristic(),
-            AllButOneAreKnownInRow(), AllButOneAreKnownInCol(), AllButOneAreKnownInQuadrant(),
-            UniqueValueLeftInRow(), UniqueValueLeftInCol(), UniqueValueLeftInQuadrant(),
-            CombinationInRow(), CombinationInCol(), CombinationInQuadrant(),
-            MatchingLineSubsets(sm),
-            ClosetSubsetInRow(), ClosetSubsetInCol(), ClosetSubsetInQuadrant()
+    val fastHeuristics: Array<Heuristic> = arrayOf(
+        SingleValueInCellHeuristic(),
+        AllButOneAreKnownInRow(), AllButOneAreKnownInCol(), AllButOneAreKnownInQuadrant(),
+        UniqueValueLeftInRow(), UniqueValueLeftInCol(), UniqueValueLeftInQuadrant()
+    )
+
+    val mediumHeuristics: Array<Heuristic> = arrayOf(
+        CombinationInRow(), CombinationInCol(), CombinationInQuadrant(),
+        MatchingLineSubsets(sm)
+    )
+
+    val slowHeuristics: Array<Heuristic> = arrayOf(
+        ClosetSubsetInRow(), ClosetSubsetInCol(), ClosetSubsetInQuadrant()
     )
 
     sm.prepare()
@@ -39,8 +45,22 @@ fun solve(sm: SudokuMatrix) {
             Log.debug("Action Matrix:");   sm.currWorkSet.print()
         }
 
-        for(heuristic in heuristics)
+        for(heuristic in fastHeuristics)
             heuristic.process(sm, pass)
+
+        // optimization: only process slow heuristics when we are out of other possibilities
+        if( !sm.nextWorkSet.hasWork() ) {
+            Log.warn("pass $pass: running ${mediumHeuristics.size} medium-complexity heuristics...")
+            for (heuristic in mediumHeuristics)
+                heuristic.process(sm, pass)
+        }
+
+        // optimization: only process slow heuristics when we are out of other possibilities
+        if( !sm.nextWorkSet.hasWork() ) {
+            Log.warn("pass $pass: running ${slowHeuristics.size} high-complexity heuristics...")
+            for (heuristic in slowHeuristics)
+                heuristic.process(sm, pass)
+        }
     }
 }
 
